@@ -1,5 +1,6 @@
 from backtesting.Market import Market
 from backtesting.Order import Order
+from backtesting.Parser.CSVOrderParser import CSVOrderParser
 from backtesting.Portfolio import Portfolio
 import matplotlib.pyplot as plt
 import pylab
@@ -10,17 +11,12 @@ import pylab
 
 market = Market(["AAPL","IBM"],"2011-01-01","2011-01-31")
 portfolio = Portfolio(market, 1000000)
-buy_aapl_order = Order(market, "2011-01-10", "AAPL", "Buy", 100)
-buy_ibm_order = Order(market, "2011-01-11", "IBM", "Buy", 100)
-sell_aapl_order = Order(market, "2011-01-12", "AAPL", "Sell", 50)
-sell_ibm_order = Order(market, "2011-01-14", "IBM", "Sell", 100)
-sell_aapl_order1 = Order(market, "2011-01-28", "AAPL", "Sell", 50)
 
-portfolio.add_order(buy_ibm_order)
-portfolio.add_order(buy_aapl_order)
-portfolio.add_order(sell_ibm_order)
-portfolio.add_order(sell_aapl_order)
-portfolio.add_order(sell_aapl_order1)
+order_parser = CSVOrderParser("test/data/SimpleOrdersFile.csv")
+order_parser.parse()
+
+for order in order_parser.get_parsed_orders():
+    portfolio.add_order(order)
 
 portfolio.execute()
 
