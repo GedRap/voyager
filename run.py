@@ -9,11 +9,13 @@ import pylab
 #Portfolio and Market
 #Plots value of all holdings
 
-market = Market(["AAPL","IBM"],"2011-01-01","2011-01-31")
-portfolio = Portfolio(market, 1000000)
-
 order_parser = CSVOrderParser("test/data/SimpleOrdersFile.csv")
 order_parser.parse()
+
+start_date, end_date = order_parser.get_dates_range()
+market = Market(order_parser.get_symbols_traded(),start_date,end_date)
+
+portfolio = Portfolio(market, 1000000)
 
 for order in order_parser.get_parsed_orders():
     portfolio.add_order(order)
