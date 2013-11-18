@@ -12,6 +12,16 @@ class CSVOrderParserTest(unittest.TestCase):
 
         orders = parser.get_parsed_orders()
 
+        symbols = parser.get_symbols_traded()
+
+        self.assertEqual(len(symbols), 2)
+        self.assertTrue("AAPL" in symbols)
+        self.assertTrue("IBM" in symbols)
+
+        first_trade, last_trade = parser.get_dates_range()
+        self.assertEqual("2011-01-10", first_trade.strftime("%Y-%m-%d"))
+        self.assertEqual("2011-01-13", last_trade.strftime("%Y-%m-%d"))
+
         self.assertEqual(len(orders), 3)
 
         self.assertEqual(orders[0].symbol, "AAPL")
