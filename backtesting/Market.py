@@ -16,13 +16,14 @@ class Market:
 
         Parameters:
         symbols - List of symbols traded
-        start_date - Date in YYYY-mm-dd format, used as a time range when loading
+        start_date - datetime object, used as a time range when loading
         historical historical_data
-        end_date - Date in YYYY-mm-dd format, used as a time range when loading
+        end_date - datetime object, used as a time range when loading
         historical data
         """
-        self.dt_start = dt.datetime.strptime(start_date,"%Y-%m-%d")
-        self.dt_end = dt.datetime.strptime(end_date, "%Y-%m-%d")
+
+        self.dt_start = start_date
+        self.dt_end = end_date
         self.ldt_timestamps = du.getNYSEdays(self.dt_start, self.dt_end, dt.timedelta(hours=16))
 
         self.symbols = symbols
