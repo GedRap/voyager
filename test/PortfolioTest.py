@@ -10,7 +10,10 @@ class PortfolioTest(unittest.TestCase):
         self.date_range = date_range('1/1/2011', periods=30, freq='D')
         self.ts = Series(0, index=self.date_range)
 
-        self.market = Market(["AAPL","IBM"],"2011-01-01","2011-12-31")
+        start_date = datetime(2011, 1, 1)
+        end_date = datetime(2011, 12, 31)
+
+        self.market = Market(["AAPL","IBM"],start_date,end_date)
         self.portfolio = Portfolio(self.market, 1000000)
         self.buy_aapl_order = Order(self.market, "2011-01-10", "AAPL", "Buy", 100)
         self.buy_ibm_order = Order(self.market, "2011-01-11", "IBM", "Buy", 15)
@@ -76,6 +79,15 @@ class PortfolioTest(unittest.TestCase):
 
         self.portfolio.get_holding_value("IBM","2011-01-18")
         self.assertEqual(self.portfolio.get_holding_value("IBM","2011-01-18"),0)
+
+    def test_calculate_portfolio_value(self):
+        self.add_all_orders()
+        self.portfolio.execute_orders()
+        self.portfolio.calculate_holdings_value()
+        self.portfolio.calculate_portfolio_value()
+
+        self.assertEqual(self.portfolio.portfolio_value["2011-01-04"], 1000000)
+        self.assertEqual(self.portfolio.portfolio_value["2011-01-10"], 965901)
 
     #helper method
     def add_all_orders(self):

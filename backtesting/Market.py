@@ -24,7 +24,8 @@ class Market:
 
         self.dt_start = start_date
         self.dt_end = end_date
-        self.ldt_timestamps = du.getNYSEdays(self.dt_start, self.dt_end, dt.timedelta(hours=16))
+
+        self.ldt_timestamps = du.getNYSEdays(start_date, end_date, dt.timedelta(hours=16))
 
         self.symbols = symbols
         self.historical_data_loaded = False

@@ -44,6 +44,9 @@ class Portfolio:
         #Number of shares held at a given date
         self.holdings_shares = DataFrame(self.market.get_trading_days_ts())
 
+        #Overall portfolio value (holdings+cash)
+        self.portfolio_value = pd.Series(0, index=self.trading_days)
+
     def add_order(self, order):
         """Add order to the list of orders to be executed"""
         self.orders.append(order)
@@ -120,6 +123,12 @@ class Portfolio:
         for index, series in self.holdings_value.iterrows():
             self.holdings_value_sum[index] = series.sum()
 
+    def calculate_portfolio_value(self):
+        """
+        Calculate total portfolio value (holdings+cash) and save it in time
+        series
+        """
+        self.portfolio_value = self.holdings_value_sum + self.cash_ts
 
     def execute(self):
         """
