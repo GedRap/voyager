@@ -2,6 +2,7 @@ from backtesting.Market import Market
 from backtesting.Order import Order
 from backtesting.Parser.CSVOrderParser import CSVOrderParser
 from backtesting.Portfolio import Portfolio
+from backtesting.Report.PortfolioReport import PortfolioReport
 import matplotlib.pyplot as plt
 import pylab
 
@@ -21,6 +22,10 @@ for order in order_parser.get_parsed_orders():
     portfolio.add_order(order)
 
 portfolio.execute()
+portfolio.calculate_portfolio_value()
+
+report = PortfolioReport(portfolio)
+print report.get_return()
 
 figure = plt.figure()
 
