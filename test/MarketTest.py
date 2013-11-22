@@ -5,7 +5,9 @@ from backtesting.Market import Market
 
 class MarketTest(unittest.TestCase):
     def setUp(self):
-        self.market = Market(["GOOG"],"2011-01-01","2011-01-30")
+        start_date = datetime(2011, 1, 1)
+        end_date = datetime(2011, 1, 30)
+        self.market = Market(["GOOG"],start_date,end_date)
         self.market.load_historical_data()
 
     def test_get_stock_price(self):
