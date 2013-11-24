@@ -30,4 +30,4 @@ Distributed under MIT license. Have fun.
 
 I can be contacted and happy to discuss anything using email, gediminas.rap at google's little email service.
 
-[My other projcets](http://gedrap.me/projects.html)
+[My other projects](http://gedrap.me/projects.html)
