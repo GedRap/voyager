@@ -57,7 +57,7 @@ class Portfolio:
         self.orders.sort(key=lambda x: x.timestamp, reverse=False)
 
 
-    def execute_orders(self):
+    def calculate_number_of_shares_held(self):
         """
         'execute' all in the portfolio orders
 
@@ -73,11 +73,11 @@ class Portfolio:
                 self.traded_symbols.add(order.symbol)
 
             symb_time_series = self.holdings_shares[order.symbol]
-            self.holdings_shares[order.symbol] = order.execute_on_time_series(symb_time_series)
-            self.execute_order_on_cash_ts(order)
+            self.holdings_shares[order.symbol] = order.update_number_of_shares_held(symb_time_series)
+            self.update_cash_ts_with_order(order)
 
 
-    def execute_order_on_cash_ts(self, order, price='close'):
+    def update_cash_ts_with_order(self, order, price='close'):
         """
         Execute order on cash time series
 
@@ -99,7 +99,7 @@ class Portfolio:
         """
         return self.holdings_value[symbol][timestamp]
 
-    def calculate_holdings_value(self):
+    def calculate_holdings_value_for_each_symbol(self):
         """
         Get all holdings (shares in the portfolio) value for every day
         """
@@ -142,6 +142,6 @@ class Portfolio:
         4) Sums all holdings values for any given date and saves as a
         time series
         """
-        self.execute_orders()
-        self.calculate_holdings_value()
+        self.calculate_number_of_shares_held()
+        self.calculate_holdings_value_for_each_symbol()
         self.calculate_holdings_value_sum()

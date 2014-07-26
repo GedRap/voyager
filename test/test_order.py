@@ -11,15 +11,15 @@ class OrderTest(unittest.TestCase):
         self.sell_order = Order(None, "2011-01-03", "AAPL", "Sell", 50)
 
     def test_buy_order(self):
-        new_ts = self.buy_order.execute_on_time_series(self.ts)
+        new_ts = self.buy_order.update_number_of_shares_held(self.ts)
 
         self.assertEqual(self.ts["2011-01-01"],0)
         self.assertEqual(self.ts["2011-01-02"],100)
         self.assertEqual(self.ts["2011-01-03"],100)
 
     def test_buy_and_sell(self):
-        new_ts = self.buy_order.execute_on_time_series(self.ts)
-        new_ts = self.sell_order.execute_on_time_series(new_ts)
+        new_ts = self.buy_order.update_number_of_shares_held(self.ts)
+        new_ts = self.sell_order.update_number_of_shares_held(new_ts)
         self.assertEqual(self.ts["2011-01-01"],0)
         self.assertEqual(self.ts["2011-01-02"],100)
         self.assertEqual(self.ts["2011-01-03"],50)

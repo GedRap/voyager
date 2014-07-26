@@ -41,18 +41,18 @@ class PortfolioTest(unittest.TestCase):
         #assert initial amount
         self.assertEqual(self.portfolio.cash_ts["2011-01-07"],1000000)
 
-        self.portfolio.execute_order_on_cash_ts(self.buy_aapl_order)
+        self.portfolio.update_cash_ts_with_order(self.buy_aapl_order)
         self.assertEqual(self.portfolio.cash_ts["2011-01-11"],965901)
 
-        self.portfolio.execute_order_on_cash_ts(self.buy_ibm_order)
+        self.portfolio.update_cash_ts_with_order(self.buy_ibm_order)
         self.assertEqual(self.portfolio.cash_ts["2011-01-12"],963755)
 
-        self.portfolio.execute_order_on_cash_ts(self.sell_aapl_order)
+        self.portfolio.update_cash_ts_with_order(self.sell_aapl_order)
         self.assertEqual(self.portfolio.cash_ts["2011-01-14"],980902)
 
     def test_execute_orders(self):
         self.add_all_orders()
-        self.portfolio.execute_orders()
+        self.portfolio.calculate_number_of_shares_held()
 
         apple_ts = self.portfolio.holdings_shares["AAPL"]
 
@@ -67,8 +67,8 @@ class PortfolioTest(unittest.TestCase):
 
     def test_calculate_holdings_value(self):
         self.add_all_orders()
-        self.portfolio.execute_orders()
-        self.portfolio.calculate_holdings_value()
+        self.portfolio.calculate_number_of_shares_held()
+        self.portfolio.calculate_holdings_value_for_each_symbol()
 
         self.assertEqual(self.portfolio.get_holding_value("AAPL","2011-01-04"),0)
         self.assertEqual(self.portfolio.get_holding_value("AAPL","2011-01-11"),34018)
@@ -82,8 +82,8 @@ class PortfolioTest(unittest.TestCase):
 
     def test_calculate_portfolio_value(self):
         self.add_all_orders()
-        self.portfolio.execute_orders()
-        self.portfolio.calculate_holdings_value()
+        self.portfolio.calculate_number_of_shares_held()
+        self.portfolio.calculate_holdings_value_for_each_symbol()
         self.portfolio.calculate_portfolio_value()
 
         self.assertEqual(self.portfolio.portfolio_value["2011-01-04"], 1000000)

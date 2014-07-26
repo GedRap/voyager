@@ -17,7 +17,7 @@ class PortfolioReportTest(unittest.TestCase):
         for order in orders:
             self.portfolio.add_order(order)
 
-        self.portfolio.execute_orders()
+        self.portfolio.calculate_number_of_shares_held()
         self.portfolio.calculate_portfolio_value()
 
         self.portfolio_report = PortfolioReport(self.portfolio)

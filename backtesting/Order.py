@@ -34,7 +34,7 @@ class Order:
         self.type = type
         self.quantity = quantity
 
-    def execute_on_time_series(self, ts):
+    def update_number_of_shares_held(self, ts):
         """
         Execute order on time series, which stores number of
         shares held on a given timestamp
