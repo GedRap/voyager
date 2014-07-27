@@ -15,7 +15,7 @@ class PortfolioReportTest(unittest.TestCase):
         self.market = Market(parser.get_symbols_traded(),start_date,end_date)
         self.portfolio = Portfolio(self.market, 1000000)
         for order in orders:
-            self.portfolio.add_order(order)
+            self.portfolio.add_future_order(order)
 
         self.portfolio.calculate_number_of_shares_held()
         self.portfolio.calculate_portfolio_value()

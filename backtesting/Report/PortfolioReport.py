@@ -5,6 +5,7 @@ from Report import Report
 
 # Class to generate a report for a given portfolio after its
 # orders have been executed
+# @todo refactor
 class PortfolioReport(Report):
     def __init__(self, portfolio):
         """

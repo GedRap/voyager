@@ -14,6 +14,8 @@ import time
 class Order:
     TYPE_BUY = "Buy"
     TYPE_SELL = "Sell"
+    TYPE_SHORT_OPEN = "ShortOpen"
+    TYPE_SHORT_CLOSE = "ShortClose"
 
     def __init__(self, market, timestamp, symbol, type, quantity):
         """
@@ -34,18 +36,8 @@ class Order:
         self.type = type
         self.quantity = quantity
 
-    def update_number_of_shares_held(self, ts):
-        """
-        Execute order on time series, which stores number of
-        shares held on a given timestamp
-        """
-        if self.type == self.TYPE_BUY:
-            ts[self.timestamp:] = ts[self.timestamp] + self.quantity
-        if self.type == self.TYPE_SELL:
-            ts[self.timestamp:] = ts[self.timestamp] - self.quantity
-
-        return ts
-
+    def is_short(self):
+        return (self.type == self.TYPE_SHORT_OPEN or self.type == self.TYPE_SHORT_CLOSE)
 
     def to_string(self):
         """

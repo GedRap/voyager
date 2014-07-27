@@ -6,6 +6,8 @@ import QSTK.qstkutil.qsdateutil as du
 import datetime as dt
 import QSTK.qstkutil.DataAccess as da
 import QSTK.qstkutil.tsutil as tsu
+from backtesting.FutureOrders import FutureOrders
+from backtesting.Holding import Holding
 
 from pandas import *
 
@@ -28,56 +30,31 @@ class Portfolio:
         #Initial cash
         self.cash = cash
 
-        #List of orders to be executed
+        #List of orders executed
         self.orders = []
 
-        #Set of traded symbols
-        self.traded_symbols = set()
+        #List of orders to be executed in the future
+        self.future_orders = FutureOrders()
 
         #Timeseries, which stores cash balance
         self.cash_ts = pd.Series(cash, index=self.trading_days)
 
-        #Products of number of shares and the stock price at any given date
-        self.holdings_value = DataFrame(self.market.get_trading_days_ts())
-        #Total value of all assets held at given date
-        self.holdings_value_sum = pd.Series(0,index=self.trading_days)
-        #Number of shares held at a given date
-        self.holdings_shares = DataFrame(self.market.get_trading_days_ts())
+        self.holding = Holding(self.trading_days)
 
         #Overall portfolio value (holdings+cash)
         self.portfolio_value = pd.Series(0, index=self.trading_days)
 
-    def add_order(self, order):
+    def add_future_order(self, order):
         """Add order to the list of orders to be executed"""
-        self.orders.append(order)
+        self.future_orders.add_order(order)
 
 
-    def sort_orders(self):
+    def sort_executed_orders(self):
         """Sort orders by timestamp in the ascending order"""
         self.orders.sort(key=lambda x: x.timestamp, reverse=False)
 
 
-    def calculate_number_of_shares_held(self):
-        """
-        'execute' all in the portfolio orders
-
-        Populates holdings_shares data frame, which stores number
-        of shares held for given symbol and given time
-        """
-        self.sort_orders()
-
-        for order in self.orders:
-            if not order.symbol in self.holdings_shares:
-                #symb_time_series = Series(0, index=self.market.get_trading_days())
-                self.holdings_shares[order.symbol] = 0
-                self.traded_symbols.add(order.symbol)
-
-            symb_time_series = self.holdings_shares[order.symbol]
-            self.holdings_shares[order.symbol] = order.update_number_of_shares_held(symb_time_series)
-            self.update_cash_ts_with_order(order)
-
-
-    def update_cash_ts_with_order(self, order, price='close'):
+    def update_cash_with_order(self, order, price='close'):
         """
         Execute order on cash time series
 
@@ -86,35 +63,16 @@ class Portfolio:
         """
         quantity = order.quantity
         sharePrice = self.market.get_stock_price(order.symbol,order.timestamp,price)
-        orderValue = quantity * sharePrice
+        order_value = quantity * sharePrice
 
-        if order.type == order.TYPE_BUY:
-            orderValue = orderValue * -1
+        if order.type == order.TYPE_BUY or order.type == order.TYPE_SHORT_OPEN:
+            order_value = order_value * -1
 
-        self.cash_ts[order.timestamp:] = self.cash_ts[order.timestamp] + orderValue
-
-    def get_holding_value(self,symbol,timestamp):
-        """
-        Get a holding value for any given date
-        """
-        return self.holdings_value[symbol][timestamp]
-
-    def calculate_holdings_value_for_each_symbol(self):
-        """
-        Get all holdings (shares in the portfolio) value for every day
-        """
-        self.market.check_if_data_loaded()
-
-        for symbol in self.traded_symbols:
-            #Time series of number of shares held
-            shares_held = self.holdings_shares[symbol]
-            #Time series of close prices
-            stock_prices = self.market.get_symbol_ts(symbol,"close")
-            #Compute value by multiplying the price and number
-            #of shares for every day
-            self.holdings_value[symbol] = (shares_held * stock_prices)
+        self.cash_ts[order.timestamp:] = self.cash_ts[order.timestamp] + order_value
+        self.cash += order_value
 
 
+    # @todo replace
     def calculate_holdings_value_sum(self):
         """
         Populate a time series, which holds the value of all
@@ -123,6 +81,7 @@ class Portfolio:
         for index, series in self.holdings_value.iterrows():
             self.holdings_value_sum[index] = series.sum()
 
+    # @todo replace
     def calculate_portfolio_value(self):
         """
         Calculate total portfolio value (holdings+cash) and save it in time
@@ -130,18 +89,10 @@ class Portfolio:
         """
         self.portfolio_value = self.holdings_value_sum + self.cash_ts
 
-    def execute(self):
-        """
-        Completely execute  all orders. Only this execution function should be
-        called from outside the class.
+    def process_day(self, day):
+        orders_for_day = self.future_orders.get_orders_to_date(day)
 
-        It does:
-        1) Populates time series with number of shares held for every share
-        2) Calculates cash balance for every date
-        3) Calculates holdings value, for every share
-        4) Sums all holdings values for any given date and saves as a
-        time series
-        """
-        self.calculate_number_of_shares_held()
-        self.calculate_holdings_value_for_each_symbol()
-        self.calculate_holdings_value_sum()
+        if len(orders_for_day):
+            for order in orders_for_day:
+                self.update_cash_with_order(order)
+                self.holding.update_with_order(order)
