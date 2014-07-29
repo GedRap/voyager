@@ -55,4 +55,4 @@ class FutureOrdersTest(unittest.TestCase):
         orders = self.future_orders.get_orders_to_date(now)
         self.assertEqual(len(orders), 2)
         self.assertEqual(len(self.future_orders.orders), 1)
-        self.assertTrue(orders[0].symbol == "AAPL" or orders[1].symbol == "IBM", "Wrong orders returned")
+        self.assertTrue((orders[0].symbol == "AAPL" or orders[0].symbol == "IBM") and (orders[0].symbol == "IBM" or orders[0].symbol == "AAPL"), "Wrong orders returned")
