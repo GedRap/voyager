@@ -96,3 +96,5 @@ class Portfolio:
             for order in orders_for_day:
                 self.update_cash_with_order(order)
                 self.holding.update_with_order(order)
+
+        return orders_for_day
