@@ -59,23 +59,23 @@ class PortfolioTest(unittest.TestCase):
 
         self.assertEqual(self.get_long_holding("AAPL"), 0)
 
-        orders = self.portfolio.process_day(date0110)
+        orders = self.portfolio.process_up_to_date(date0110)
         self.assertEqual(self.get_long_holding("AAPL"), 100)
         self.assertEqual(self.get_long_holding("IBM"), 0)
 
-        self.portfolio.process_day(date0111)
+        self.portfolio.process_up_to_date(date0111)
         self.assertEqual(self.get_long_holding("AAPL"), 100)
         self.assertEqual(self.get_long_holding("IBM"), 15)
 
-        self.portfolio.process_day(date0112)
+        self.portfolio.process_up_to_date(date0112)
         self.assertEqual(self.get_long_holding("AAPL"), 50)
         self.assertEqual(self.get_long_holding("IBM"), 15)
 
-        self.portfolio.process_day(date0113)
+        self.portfolio.process_up_to_date(date0113)
         self.assertEqual(self.get_long_holding("AAPL"), 50)
         self.assertEqual(self.get_long_holding("IBM"), 15)
 
-        self.portfolio.process_day(date0114)
+        self.portfolio.process_up_to_date(date0114)
         self.assertEqual(self.get_long_holding("AAPL"), 50)
         self.assertEqual(self.get_long_holding("IBM"), 0)
 

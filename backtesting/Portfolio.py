@@ -89,8 +89,8 @@ class Portfolio:
         """
         self.portfolio_value = self.holdings_value_sum + self.cash_ts
 
-    def process_day(self, day):
-        orders_for_day = self.future_orders.get_orders_to_date(day)
+    def process_up_to_date(self, date):
+        orders_for_day = self.future_orders.get_orders_to_date(date)
 
         if len(orders_for_day):
             for order in orders_for_day:
