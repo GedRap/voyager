@@ -34,13 +34,14 @@ class Holding:
         #self.short_holdings_shares = DataFrame()
         self.short_holdings_shares = {}
 
-
     def update_with_order(self, order):
-        if order.is_short():
-            self.update_holding(order.symbol, self.POSITION_SHORT, order.quantity)
-        else:
-            self.update_holding(order.symbol, self.POSITION_LONG, order.quantity)
+        position = self.POSITION_SHORT if order.is_short() else self.POSITION_LONG
+        quantity = order.quantity
 
+        if order.type == order.TYPE_SELL or order.type == order.TYPE_SHORT_CLOSE:
+            quantity *= -1
+
+        self.update_holding(order.symbol, position, quantity)
         self.calculate_holdings_on_dataframes(order)
 
     def calculate_holdings_on_dataframes(self, order):
