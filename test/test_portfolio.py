@@ -3,7 +3,7 @@ from pandas import *
 
 from backtesting.Order import Order
 from backtesting.Portfolio import Portfolio
-from backtesting.Market import Market
+from backtesting.StockMarket import StockMarket
 
 class PortfolioTest(unittest.TestCase):
     def setUp(self):
@@ -13,7 +13,7 @@ class PortfolioTest(unittest.TestCase):
         start_date = datetime(2011, 1, 1)
         end_date = datetime(2011, 12, 31)
 
-        self.market = Market(["AAPL","IBM"],start_date,end_date)
+        self.market = StockMarket(["AAPL","IBM"],start_date,end_date)
         self.portfolio = Portfolio(self.market, 1000000)
         self.buy_aapl_order = Order(self.market, "2011-01-10", "AAPL", "Buy", 100)
         self.buy_ibm_order = Order(self.market, "2011-01-11", "IBM", "Buy", 15)

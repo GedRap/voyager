@@ -1,10 +1,11 @@
 import unittest
 from pandas import *
 from datetime import *
+from mock import MagicMock
 
 from backtesting.Order import Order
 from backtesting.Portfolio import Portfolio
-from backtesting.Market import Market
+from backtesting.StockMarket import StockMarket
 from backtesting.Holding import Holding
 
 class HoldingTest(unittest.TestCase):
@@ -15,7 +16,11 @@ class HoldingTest(unittest.TestCase):
         start_date = datetime(2011, 1, 1)
         end_date = datetime(2011, 12, 31)
 
-        self.market = Market(["AAPL","IBM"],start_date,end_date)
+        with patch("Market") as mock:
+            instance = mock.return_value
+            instance.get_stock_price.return_value = 1.23
+
+        self.market = StockMarket(["AAPL","IBM"],start_date,end_date)
         #self.portfolio = Portfolio(self.market, 1000000)
         self.buy_aapl_order = Order(self.market, "2011-01-10", "AAPL", "Buy", 100)
         self.buy_ibm_order = Order(self.market, "2011-01-11", "IBM", "Buy", 15)
@@ -28,6 +33,9 @@ class HoldingTest(unittest.TestCase):
         self.holding = Holding(self.market.get_trading_days())
 
         self.ts = Series(0, index=self.market.get_trading_days())
+
+    def test_mock(self):
+        self.assertEqual(self.market.get_stock_price(), 1.23)
 
     def test_get_holding_amount_no_data(self):
         amount = self.holding.get_latest_holding_amount(self.holding.POSITION_LONG, "HELLO")

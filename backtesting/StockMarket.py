@@ -9,7 +9,7 @@ import QSTK.qstkutil.tsutil as tsu
 import QSTK.qstkstudy.EventProfiler as ep
 
 #Market entity used to get market prices for given stock at a given time
-class Market:
+class StockMarket:
     def __init__(self, symbols, start_date, end_date):
         """
         Initialize Market object by storing some basic data
