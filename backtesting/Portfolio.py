@@ -62,7 +62,7 @@ class Portfolio:
         series of cash balance respectively
         """
         quantity = order.quantity
-        sharePrice = self.market.get_stock_price(order.symbol,order.timestamp,price)
+        sharePrice = self.market.get_symbol_price(order.symbol,order.timestamp,price)
         order_value = quantity * sharePrice
 
         if order.type == order.TYPE_BUY or order.type == order.TYPE_SHORT_OPEN:

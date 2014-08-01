@@ -8,8 +8,10 @@ import QSTK.qstkutil.DataAccess as da
 import QSTK.qstkutil.tsutil as tsu
 import QSTK.qstkstudy.EventProfiler as ep
 
+from backtesting.MarketInterface import MarketInterface
+
 #Market entity used to get market prices for given stock at a given time
-class StockMarket:
+class StockMarket(MarketInterface):
     def __init__(self, symbols, start_date, end_date):
         """
         Initialize Market object by storing some basic data
@@ -48,7 +50,7 @@ class StockMarket:
         if not self.historical_data_loaded:
             self.load_historical_data()
 
-    def get_stock_price(self, symbol, timestamp, price):
+    def get_symbol_price(self, symbol, timestamp, price="close"):
         """
         Get stock price for given timestamp
 

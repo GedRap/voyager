@@ -11,11 +11,11 @@ class MarketTest(unittest.TestCase):
         self.market.load_historical_data()
 
     def test_get_stock_price(self):
-        self.assertEqual(self.market.get_stock_price("GOOG","2011-01-10","close"),614.21)
-        self.assertEqual(self.market.get_stock_price("GOOG","2011-01-10","actual_close"),614.21)
-        self.assertEqual(self.market.get_stock_price("GOOG","2011-01-10","open"),614.80)
-        self.assertEqual(self.market.get_stock_price("GOOG","2011-01-10","high"),615.39)
-        self.assertEqual(self.market.get_stock_price("GOOG","2011-01-10","low"),608.56)
+        self.assertEqual(self.market.get_symbol_price("GOOG","2011-01-10","close"),614.21)
+        self.assertEqual(self.market.get_symbol_price("GOOG","2011-01-10","actual_close"),614.21)
+        self.assertEqual(self.market.get_symbol_price("GOOG","2011-01-10","open"),614.80)
+        self.assertEqual(self.market.get_symbol_price("GOOG","2011-01-10","high"),615.39)
+        self.assertEqual(self.market.get_symbol_price("GOOG","2011-01-10","low"),608.56)
 
 
 if __name__ == '__main__':

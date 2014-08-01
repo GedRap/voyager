@@ -18,7 +18,7 @@ class HoldingTest(unittest.TestCase):
 
         with patch("Market") as mock:
             instance = mock.return_value
-            instance.get_stock_price.return_value = 1.23
+            instance.get_symbol_price.return_value = 1.23
 
         self.market = StockMarket(["AAPL","IBM"],start_date,end_date)
         #self.portfolio = Portfolio(self.market, 1000000)
@@ -35,7 +35,7 @@ class HoldingTest(unittest.TestCase):
         self.ts = Series(0, index=self.market.get_trading_days())
 
     def test_mock(self):
-        self.assertEqual(self.market.get_stock_price(), 1.23)
+        self.assertEqual(self.market.get_symbol_price(), 1.23)
 
     def test_get_holding_amount_no_data(self):
         amount = self.holding.get_latest_holding_amount(self.holding.POSITION_LONG, "HELLO")
