@@ -86,6 +86,8 @@ class StockMarket(MarketInterface):
         symbol - Stock symbol, e.g. GOOG
         price - Price type (open, high, low, close)
         """
+        self.check_if_data_loaded()
+
         return self.d_data[price][symbol]
 
     def print_daily_prices(self, symbol, timestamp):

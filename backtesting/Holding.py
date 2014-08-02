@@ -118,18 +118,24 @@ class Holding:
 
         return amount
 
-    # @todo refactor to support short orders
-    def calculate_holdings_value_for_each_symbol(self):
+    # @todo refactor to use DataFrame
+    def calculate_long_holdings_value_for_each_symbol(self):
         """
         Get all holdings (shares in the portfolio) value for every day
         """
-        self.market.check_if_data_loaded()
+        values = {}
+        for symbol in self.long_holdings_shares.keys():
+            values[symbol] = self.calculate_long_holding_value(symbol)
 
-        for symbol in self.traded_symbols:
-            #Time series of number of shares held
-            shares_held = self.holdings_shares[symbol]
-            #Time series of close prices
-            stock_prices = self.market.get_symbol_ts(symbol,"close")
-            #Compute value by multiplying the price and number
-            #of shares for every day
-            self.holdings_value[symbol] = (shares_held * stock_prices)
+        return values
+
+    def calculate_long_holding_value(self, symbol):
+        if not symbol in self.long_holdings_shares:
+            raise NotImplementedError(symbol + " is not found")
+
+        time_series = self.long_holdings_shares[symbol]
+        prices = self.market.get_symbol_ts(symbol, "close")
+
+        value_ts = time_series * prices
+
+        return value_ts
